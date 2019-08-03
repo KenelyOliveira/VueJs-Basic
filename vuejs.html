@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VueJs</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app" v-on:mousemove="checkMousePosition">
+            <span v-once><b>{{user.name}}</b> - immutable binding</span>
+            <br/>
+            <span><b>{{user.name}}</b></span>
+            <br/>
+            <input type="text" id="name" autocomplete="off" v-model="user.name" v-on:keyup.shift="makeLetterBigger" />
+            <a href="#" v-bind:href="user.social.github">GitHub</a>
+            <button v-on:click="save">Save</button>
+            <br/>
+            <span><b>{{ date() }}</b></span>
+            <br/>
+            <span><b>{{ computedDate }}</b> - computed value, doesn't change until its dependencies change</span>
+            <br/>
+        </div>
+    </body>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                yboundary: 20,
+                user: {
+                    name: 'Kenely de Oliveira',
+                    social: {
+                        github: 'https://github.com/KenelyOliveira',
+                    }
+                },
+                botheringMessageCount: 0
+            },
+            methods: {
+                getUserName() {
+                    return localStorage.getItem("user");
+                },
+                save() {
+                    localStorage.setItem("user", this.user.name)
+                },
+                checkMousePosition(e){
+                    if (e.clientY < this.yboundary && this.botheringMessageCount < 1) {
+                        this.botheringMessageCount++;
+                        alert('Stay a little longer!');
+                    }
+                },
+                makeLetterBigger(e){
+
+                },
+                date() {
+                    let currentDate = new Date();
+                    return currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+                }
+            },
+            computed: {
+                //The difference [between computed properties and methods] is that computed properties are cached based on their reactive dependencies. 
+                //A computed property will only re-evaluate when some of its reactive dependencies have changed.
+                computedDate() {
+                    let currentDate = new Date();
+                    return currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+                }
+            }
+        });
+    </script>
+</html>
